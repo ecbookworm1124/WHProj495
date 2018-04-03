@@ -11,6 +11,16 @@ public class Item {
 	//private int Quantity;
 	
 	
-	public Item() {}
+	public Item(int ID, String Name, String UPC, String location) {
+		this.ID = ID;
+		this.Name = Name;
+		this.UPC = UPC;
+		this.location = location;
+	}
+	
+	public Object [] getInfo() {
+		Object [] data = {ID, Name, UPC, location};
+		return data;
+	}
 
 }
