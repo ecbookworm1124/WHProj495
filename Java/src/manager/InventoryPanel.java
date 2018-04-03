@@ -6,7 +6,7 @@ import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-public class FullInventory extends JPanel{
+public class InventoryPanel extends JPanel{
 	
 	ArrayList<Item> inventory;
 	
@@ -14,7 +14,7 @@ public class FullInventory extends JPanel{
 	
 	//Panel to display the full inventory
 	
-	public FullInventory(ArrayList<Item> inventory) {
+	public InventoryPanel(ArrayList<Item> inventory) {
 		this.inventory = inventory;
 	}
 	

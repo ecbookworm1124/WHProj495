@@ -29,5 +29,12 @@ public class DB{
 		
 		return false;
 	}
+	
+	public boolean updateRecords() {
+		
+		
+		
+		return false;
+	}
 
 }
