@@ -21,7 +21,7 @@ public class UI extends JFrame{
 		
 	}
 	
-	private void setUp() {
+	private void setup() {
 		
 		//Add inventory panel to ScrollPane
 		//
