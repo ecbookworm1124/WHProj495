@@ -29,6 +29,11 @@ public class UI extends JFrame{
 		this.add(products, BorderLayout.WEST);
 	}
 	
+	private void showDetails() {
+		//Show the details of an item in a window using notebook style tabs
+		//One tab for details, another tab for history.
+	}
+	
 	private void newIncoming() {
 		// Creates popup window with information for new Incoming orders
 		
