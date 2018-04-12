@@ -1,43 +1,128 @@
 package manager;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.RowFilter;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import java.awt.BorderLayout;
+import java.awt.Component;
+
+import javax.swing.JScrollPane;
+import javax.swing.BoxLayout;
 
 public class InventoryPanel extends JPanel{
 	
-	ArrayList<Item> inventory;
+	private LinkedHashMap<Integer, Item> inventory;
 	
-	private TableModel table;
+	private JTable table_2;
+	private JButton searchBtn;
+	private JTextField searchField;
+	private DefaultTableModel model;
 	
 	//Panel to display the full inventory
 	
-	public InventoryPanel(ArrayList<Item> inventory) {
+	public InventoryPanel(LinkedHashMap<Integer, Item> inventory, UI myGUI) {
 		this.inventory = inventory;
+		setLayout(new BorderLayout(0, 0));
+		/////////////////////////////////////////////////////////////////////////////////
+		
+		JPanel top = new JPanel();
+		top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
+		JPanel title = new JPanel();
+		JLabel lblInventoryList = new JLabel("Inventory List");
+		title.add(lblInventoryList);
+		
+		
+		JPanel search = new JPanel();
+		search.setLayout(new BoxLayout(search, BoxLayout.X_AXIS));
+		JLabel searchLabel = new JLabel("Inventory ID");
+		searchField = new JTextField(10);
+		searchBtn = new JButton("Search");
+		
+		search.add(searchLabel);
+		search.add(searchField);
+		
+		
+		top.add(title);
+		top.add(search);
+			
+		
+		JPanel panel = new JPanel(new GridBagLayout());
+		
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(0,10,100,10);
+		
+		JButton viewDetails = new JButton("View Details");
+		viewDetails.addActionListener(e->getSelected(myGUI));
+		viewDetails.setAlignmentX(Component.CENTER_ALIGNMENT);
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		panel.add(viewDetails, gbc);
+		
+		JButton newShipment = new JButton("New Incoming Shipment");
+		newShipment.setAlignmentX(Component.CENTER_ALIGNMENT);
+		gbc.gridy = 1;	
+		panel.add(newShipment, gbc);
+		
+		JButton outShipment = new JButton("New Outgoing Shipment");
+		outShipment.setAlignmentX(Component.CENTER_ALIGNMENT);	
+		gbc.gridy=2;
+		panel.add(outShipment, gbc);
+		
+		
+		buildTable();
+		panel.setBorder(new EmptyBorder(50,50,50,50));
+		
+		search.add(searchBtn); // Must go last because actionlistener is added in buildTable
+		add(top, BorderLayout.NORTH);
+		add(panel, BorderLayout.EAST);
+	}
+	
+	private boolean getSelected(UI myGUI) {
+
+		int selectedRow = table_2.getSelectedRow();	
+		
+		if(selectedRow == -1) {
+			JOptionPane.showMessageDialog(this, "Please Select a Row First", "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}else{
+			myGUI.showDetails((Integer) model.getValueAt(selectedRow, 0));
+		}
+		return true;
 	}
 	
 	private void buildTable() {
-		// Building the table of inventory
 		
-		//NOTE: FOR NOW THIS IS JUST TEST DATA
+		String [] columns = {"Inventory ID", "Item Name", "UPC", "Location", "Quantity"};	
+		Object rows [][] = new Object[inventory.size()][columns.length];
 		
-		Object rows [][] = {
-				{0, "Screw Driver", "33423", "W3L32"}, //Item: ID, Name, UPC, Location
-				{1, "Napkins", "33242", "W2L2"},
-				{2, "Lawn Chair", "32253", "E3L4"},
-				{3, "Projector", "34523", "E5L2"},
-				{4, "Ball Point Pens", "5432", "A2L1"},
-				{5, "College Ruled Paper", "3224", "A1L1"}
-		};
+		int counter = 0;
+		for(Map.Entry<Integer, Item> product: inventory.entrySet()) {
+			Item item = product.getValue();
+			rows[counter] = item.getInfo();
+			counter ++;
+		}
 		
-		String [] columns = {"ID", "Name", "UPC", "Location"};
-		
-		table = new DefaultTableModel(rows, columns) {
+		model = new DefaultTableModel(rows, columns) {
 			public Class getColumnClass(int column) {
 				Class value = null;
-				
 				if((column>=0) && (column < getColumnCount())) {
 					value = getValueAt(0, column).getClass();
 					return value;
@@ -48,7 +133,67 @@ public class InventoryPanel extends JPanel{
 			}
 		};
 		
+		table_2 = new JTable(model);
+		table_2.setRowHeight(40);
 		
+		TableRowSorter<TableModel> sortCols = new TableRowSorter<TableModel>(model);
+		int locationColumn = 3; // Just whichever column holds the location data
+		sortCols.setComparator(locationColumn, (Comparator<String>) new Comparator<String>() {
+			@Override
+				public int compare(String name1, String name2) {
+				
+				/*
+				 * DISCLAIMER: THIS IS JUST PROOF OF CONCEPT:
+				 * Will need to know exactly how location is formatted before
+				 * a working sort can be configured
+				 * 
+				 * */
+				
+				
+					char [] n1 = name1.toCharArray();
+					char [] n2 = name2.toCharArray();
+					
+					for(int i = 0; i < n1.length; i++) {
+						if(n1[i] == n2[i]){
+							continue;
+						}else {
+							if(n1[i] < n2[i] || (n1[i] == "-".charAt(0) && n2[i] != "-".charAt(0))) {
+								return -1;
+							}else {
+								return 1;
+							}
+						}
+					}
+					return 0;
+				}
+			}
+		);
+		
+		table_2.setRowSorter(sortCols);
+		
+		InventoryPanel holder = this;
+		searchBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					String filter = searchField.getText().trim();
+					int testInt = Integer.parseInt(filter);
+					sortCols.setRowFilter(RowFilter.regexFilter(filter, 0));
+				}catch(NumberFormatException e) {
+					JOptionPane.showMessageDialog(holder, "Please input the Inventory ID only", "error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		
+		JScrollPane scrollPane = new JScrollPane(table_2);
+		scrollPane.setBorder(new EmptyBorder(10, 0, 10, 0));
+		add(scrollPane, BorderLayout.WEST);
+	}
+	
+	public void addRow(Object[] rowInfo) {
+			model.addRow(rowInfo);
 	}
 
+	
+	
 }
