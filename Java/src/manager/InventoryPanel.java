@@ -142,28 +142,29 @@ public class InventoryPanel extends JPanel{
 			@Override
 				public int compare(String name1, String name2) {
 				
-				/*
-				 * DISCLAIMER: THIS IS JUST PROOF OF CONCEPT:
-				 * Will need to know exactly how location is formatted before
-				 * a working sort can be configured
-				 * 
-				 * */
-				
-				
-					char [] n1 = name1.toCharArray();
-					char [] n2 = name2.toCharArray();
+					String[] location1 = name1.replaceAll("\\s+", "").split("-");
+					String[] location2 = name2.replaceAll("\\s+","").split("-");
 					
-					for(int i = 0; i < n1.length; i++) {
-						if(n1[i] == n2[i]){
-							continue;
-						}else {
-							if(n1[i] < n2[i] || (n1[i] == "-".charAt(0) && n2[i] != "-".charAt(0))) {
+					for(int i = 0; i < location1.length; i++) {
+						if(i != 1) { //aisle and shelf
+							if(Integer.parseInt(location1[i]) > Integer.parseInt(location2[i])) {
+								return 1;
+							}else if(location1[i].equals(location2[i])) {
+								continue;
+							}else {
 								return -1;
+							}
+						}else{ //bay
+							if(location1[i].charAt(0) < location2[i].charAt(0)){
+								return -1;
+							}else if (location1[i].equals(location2[i])) {
+								continue;
 							}else {
 								return 1;
 							}
 						}
 					}
+
 					return 0;
 				}
 			}

@@ -23,7 +23,7 @@ public class DB{
 		
 		String [] name = {"Screw Driver", "Napkins", "Lawn Chair", "Projector", "Ball Point Pens", "College Ruled Paper"};
 		long [] UPC = {33423, 33242, 22352, 452, 9972, 9828994};
-		String [] location = {"W33-L32", "W2-L2", "A1-L1", "A2-L1", "A112-L1", "E3-L4"};
+		String [] location = {"33-L-32", "33-L-2", "33-A-1", "32-A-1", "12 - B - 31", "3-L-4"};
 		int [] quantity = {55, 15, 35, 79, 43, 17};
 		for(int i = 0; i < name.length; i++) {
 			Item product = new Item(i, name[i], UPC[i], location[i], quantity[i]);

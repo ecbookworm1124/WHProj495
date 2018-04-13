@@ -79,6 +79,13 @@ public class UI extends JFrame{
 		// This method will connect to the DB class object.
 		
 		//Update historical record in database
+		
+		
+		
+		
+		JFrame incomingFrame = new JFrame();
+		incomingFrame.setSize(this.getWidth() - 100, this.getHeight() - 150);
+		incomingFrame.setTitle("Warehouse Inventory Management");
 	}
 	
 	private void newOutgoing() {
@@ -86,6 +93,10 @@ public class UI extends JFrame{
 		//Opens popup for outgoing shipment.
 		
 		//update historical record in database
+		
+		JFrame outgoingFrame = new JFrame();
+		outgoingFrame.setSize(this.getWidth() - 100, this.getHeight() - 150);
+		outgoingFrame.setTitle("Warehouse Inventory Management");
 	}
 	
 	private void changeItemLocation() {
@@ -93,6 +104,10 @@ public class UI extends JFrame{
 		//will be an option in the menu. Maybe under "Edit"
 		// This will allow you to change the location for an item.
 		// This will then update the database
+		
+		JFrame changeFrame = new JFrame();
+		changeFrame.setSize(this.getWidth() - 100, this.getHeight() - 150);
+		changeFrame.setTitle("Warehouse Inventory Management");
 	}
 
 }
