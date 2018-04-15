@@ -20,9 +20,9 @@ CREATE TABLE item
 CREATE TABLE address
 ( addressID number(10) not null,
 add_1 varchar2(20) not null,
-add_2 varchar2(20) not null,
-add_3 varchar2(20) not null,
-city varchar2(50)not null,
+add_2 varchar2(20),
+add_3 varchar2(20),
+city varchar2(50) not null,
 zip number(5) not null,
 state varchar2(2),
 country varchar2 (20) not null,
@@ -32,7 +32,7 @@ CONSTRAINT address_pk PRIMARY KEY (addressID)
 CREATE TABLE vendor
 ( vendorID number(6) not null,
 vendor_name varchar2(20) not null,
-vendor_email varchar2(20) not null,
+vendor_email varchar2(50) not null,
 addressID number(10) not null,
 vendor_phone number(10) not null,
 CONSTRAINT vendorID PRIMARY KEY(vendorID),
