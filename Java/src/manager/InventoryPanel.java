@@ -133,7 +133,11 @@ public class InventoryPanel extends JPanel{
 			}
 		};
 		
-		table_2 = new JTable(model);
+		table_2 = new JTable(model) {
+			public boolean isCellEditable(int row, int column) {
+				return false;
+				}
+		};
 		table_2.setRowHeight(40);
 		
 		TableRowSorter<TableModel> sortCols = new TableRowSorter<TableModel>(model);
