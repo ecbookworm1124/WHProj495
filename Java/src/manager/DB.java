@@ -42,8 +42,6 @@ public class DB{
 		// For each item in the database
 		
 		////// Implementing SQL connection ///////////////
-		
-		boolean over = true;
 		LinkedHashMap<Integer, Item> productMap = new LinkedHashMap<Integer, Item>();
 		
 		try {
@@ -62,24 +60,10 @@ public class DB{
 				productMap.put(ID, product);
 			}
 			
-		} catch (Exception e) { //Will change this to SQLException e later
+		} catch (SQLException e) {
 			//Do nothing for right now
-			over = false;
 		}
 		
-		if(over) {
-			return productMap;
-		}
-		/////////////////////////////////////////////////
-		
-		String [] name = {"Screw Driver", "Napkins", "Lawn Chair", "Projector", "Ball Point Pens", "College Ruled Paper"};
-		long [] UPC = {33423, 33242, 22352, 452, 9972, 9828994};
-		String [] location = {"33-L-32", "33-L-2", "33-A-1", "32-A-1", "12 - B - 31", "3-L-4"};
-		int [] quantity = {55, 15, 35, 79, 43, 17};
-		for(int i = 0; i < name.length; i++) {
-			Item product = new Item(i, name[i], UPC[i], location[i], quantity[i]);
-			productMap.put(i, product);
-		}
 		return productMap;
 	}
 	
