@@ -30,6 +30,7 @@ public class DB{
 			conn=ds.getConnection(userID, passwd);
 		} catch (SQLException e) {
 			//As of right now we dont need this to do anything.
+			System.out.println("Couldnt connect");
 		}
 		
 		

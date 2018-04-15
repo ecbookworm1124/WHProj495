@@ -147,8 +147,8 @@ public class InventoryPanel extends JPanel{
 			@Override
 				public int compare(String name1, String name2) {
 				
-					String[] location1 = name1.replaceAll("\\s+", "").split("-");
-					String[] location2 = name2.replaceAll("\\s+","").split("-");
+					String[] location1 = {name1.substring(0, 2), name1.substring(2,3), name1.substring(3)};//name1.replaceAll("\\s+", "").split("-");
+					String[] location2 = {name2.substring(0, 2), name2.substring(2,3), name2.substring(3)};
 					
 					for(int i = 0; i < location1.length; i++) {
 						if(i != 1) { //aisle and shelf
