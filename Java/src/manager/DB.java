@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 public class DB{
 	//Connects to database
 	
-	private String userID, passwd, jdbcUrl, query, sqlString;
+	private String userID, passwd, jdbcUrl, query;
 	private Connection conn;
 	private Statement stmt;
 	private ResultSet itemResults;
