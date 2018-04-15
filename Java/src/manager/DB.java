@@ -21,8 +21,8 @@ public class DB{
 		//Creating connection object
 		
 		jdbcUrl = "jdbc:oracle:thin:@localhost:1521:XE";
-		//userID = "";
-		//passwd = "";
+		userID = "SYSTEM";
+		passwd = "123456";
 		
 		try {
 			OracleDataSource ds = new OracleDataSource();
@@ -42,12 +42,13 @@ public class DB{
 		
 		////// Implementing SQL connection ///////////////
 		
+		boolean over = true;
+		LinkedHashMap<Integer, Item> productMap = new LinkedHashMap<Integer, Item>();
+		
 		try {
 			stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			query = "SELECT * FROM item ORDER BY itemID";
 			itemResults = stmt.executeQuery(query);
-			
-			LinkedHashMap<Integer, Item> productMap = new LinkedHashMap<Integer, Item>();
 			
 			while(itemResults.next()) {
 				int ID = itemResults.getInt(1);
@@ -62,12 +63,13 @@ public class DB{
 			
 		} catch (Exception e) { //Will change this to SQLException e later
 			//Do nothing for right now
+			over = false;
 		}
 		
+		if(over) {
+			return productMap;
+		}
 		/////////////////////////////////////////////////
-		
-		
-		LinkedHashMap<Integer, Item> productMap = new LinkedHashMap<Integer, Item>();
 		
 		String [] name = {"Screw Driver", "Napkins", "Lawn Chair", "Projector", "Ball Point Pens", "College Ruled Paper"};
 		long [] UPC = {33423, 33242, 22352, 452, 9972, 9828994};

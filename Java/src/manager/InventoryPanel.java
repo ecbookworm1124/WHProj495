@@ -138,6 +138,7 @@ public class InventoryPanel extends JPanel{
 				return false;
 				}
 		};
+		
 		table_2.setRowHeight(40);
 		
 		TableRowSorter<TableModel> sortCols = new TableRowSorter<TableModel>(model);
