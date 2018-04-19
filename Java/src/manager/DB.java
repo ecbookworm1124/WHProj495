@@ -1,7 +1,6 @@
 package manager;
 
 import java.sql.*;
-import oracle.jdbc.*;
 import oracle.jdbc.pool.OracleDataSource;
 
 import java.util.LinkedHashMap;
@@ -9,13 +8,13 @@ import java.util.LinkedHashMap;
 public class DB{
 	//Connects to database
 	
-	private String userID, passwd, jdbcUrl, query;
+	private String userID, passwd, jdbcUrl;
 	private Connection conn;
 	private Statement stmt;
 	private ResultSet itemResults;
 	
 	
-	public DB() {
+	public DB() throws SQLException{
 		
 		//Connecting to DB
 		//Creating connection object
@@ -23,17 +22,10 @@ public class DB{
 		jdbcUrl = "jdbc:oracle:thin:@localhost:1521:XE";
 		userID = "SYSTEM";
 		passwd = "123456";
-		
-		try {
-			OracleDataSource ds = new OracleDataSource();
-			ds.setURL(jdbcUrl);
-			conn=ds.getConnection(userID, passwd);
-		} catch (SQLException e) {
-			//As of right now we dont need this to do anything.
-			System.out.println("Couldnt connect");
-		}
-		
-		
+
+		OracleDataSource ds = new OracleDataSource();
+		ds.setURL(jdbcUrl);
+		conn=ds.getConnection(userID, passwd);
 	}
 	
 	public LinkedHashMap<Integer, Item> getFullInventory(){
@@ -46,7 +38,7 @@ public class DB{
 		
 		try {
 			stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			query = "SELECT * FROM item ORDER BY itemID";
+			String query = "SELECT * FROM item ORDER BY itemID";
 			itemResults = stmt.executeQuery(query);
 			
 			while(itemResults.next()) {
@@ -81,9 +73,20 @@ public class DB{
 		return false;
 	}
 	
-	public boolean updateRecords() {
+	public boolean updateRecords(Item selectedItem, String newLocation) throws SQLException {
 		
+		int ID = (int) selectedItem.getInfo()[0];
 		
+		try{
+			String query = "INSERT INTO location(locID,loc_aisle, loc_bay, loc_shelf)" + 
+					" VALUES ('"+newLocation+"','"+newLocation.substring(0,2)+"','"+newLocation.substring(2,3)+"','"+newLocation.substring(3)+"' )";
+			stmt.executeQuery(query);
+		}catch(SQLException e){
+			// do nothing with this one
+		}
+		
+		String query = "UPDATE item SET locID = '" + newLocation + "' WHERE itemID = " + ID;
+		stmt.executeQuery(query);
 		
 		return false;
 	}
