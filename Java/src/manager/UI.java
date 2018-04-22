@@ -67,7 +67,7 @@ public class UI extends JFrame{
 		
 		Item currentItem = inventory.get(ID);	
 		
-		JFrame detailsFrame = new DetailFrame(inventory, currentItem, this);
+		JFrame detailsFrame = new DetailFrame(currentItem, this, server);
 		detailsFrame.setSize(this.getWidth() - 100, this.getHeight() - 150);
 		detailsFrame.setTitle("Warehouse Inventory Management");
 		

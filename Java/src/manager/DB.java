@@ -73,6 +73,36 @@ public class DB{
 		return false;
 	}
 	
+	public LinkedHashMap<Integer, Order> getHistory(int itemID) {
+		
+		LinkedHashMap<Integer, Order> currentItem = new LinkedHashMap<Integer, Order>();
+		try {
+			stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			String query = "SELECT * FROM import_export WHERE itemID = "+itemID+" ORDER BY orderID";
+			itemResults = stmt.executeQuery(query);
+			
+			while(itemResults.next()) {
+				int orderID = itemResults.getInt(1);
+				int itemQTY = itemResults.getInt(3);
+				int vendID = itemResults.getInt(4);
+				int truckNum = itemResults.getInt(5);
+				Date date = itemResults.getDate(6);
+				
+				System.out.println(itemResults);
+				
+				Order order = new Order(orderID, itemQTY, vendID, truckNum, date);
+				currentItem.put(orderID, order);
+			}
+			
+		} catch (SQLException e) {
+			//Do nothing for right now
+			return null;
+		}
+		
+		
+		return currentItem;
+	}
+	
 	public boolean updateRecords(Item selectedItem, String newLocation) throws SQLException {
 		
 		int ID = (int) selectedItem.getInfo()[0];
