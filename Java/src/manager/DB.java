@@ -88,8 +88,6 @@ public class DB{
 				int truckNum = itemResults.getInt(5);
 				Date date = itemResults.getDate(6);
 				
-				System.out.println(itemResults);
-				
 				Order order = new Order(orderID, itemQTY, vendID, truckNum, date);
 				currentItem.put(orderID, order);
 			}
