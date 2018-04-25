@@ -3,7 +3,9 @@ package manager;
 import java.sql.*;
 import oracle.jdbc.pool.OracleDataSource;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class DB{
 	//Connects to database
@@ -14,7 +16,7 @@ public class DB{
 	private ResultSet itemResults;
 	
 	
-	public DB() throws SQLException{
+	public DB(){
 		
 		//Connecting to DB
 		//Creating connection object
@@ -22,7 +24,16 @@ public class DB{
 		jdbcUrl = "jdbc:oracle:thin:@localhost:1521:XE";
 		userID = "SYSTEM";
 		passwd = "123456";
-
+		setup(jdbcUrl, userID, passwd);
+	}
+	
+	public void setup(String host, String userID, String passwd) {
+		this.userID = userID;
+		this.jdbcUrl = host;
+		this.passwd = passwd;
+	}
+	
+	public void connect() throws SQLException {
 		OracleDataSource ds = new OracleDataSource();
 		ds.setURL(jdbcUrl);
 		conn=ds.getConnection(userID, passwd);
@@ -59,11 +70,28 @@ public class DB{
 		return productMap;
 	}
 	
-	public boolean addToDB(Item newItem) {
+	public boolean addToDB(Item newItem) throws SQLException {
 		
-		//Adds a new Item to the database, returns true if it was successful, false if not
+		Object [] itemDetails = newItem.getInfo();
 		
-		return false;
+		int ID = (Integer)itemDetails[0];
+		String name = (String)itemDetails[1];
+		long UPC = (long)itemDetails[2];
+		int quant = (Integer)itemDetails[4];
+		String locID = (String)itemDetails[3];
+		
+		try{ //Must update location table first
+			String query = "INSERT INTO location(locID,loc_aisle, loc_bay, loc_shelf)" + 
+					" VALUES ('"+locID+"','"+locID.substring(0,2)+"','"+locID.substring(2,3)+"','"+locID.substring(3)+"' )";
+			stmt.executeQuery(query);
+		}catch(SQLException e){
+			// do nothing with this one
+		}
+		
+		stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		String query = "INSERT INTO item (ItemID, ItemName, ItemUPC, ItemQTY, LocID) VALUES ('"+ID+"','"+name+"',"+UPC+","+quant+",'"+locID+"')";
+		itemResults = stmt.executeQuery(query);
+		return true;
 	}
 	
 	public boolean removeFromDB(Item newItem){
@@ -71,6 +99,28 @@ public class DB{
 		// removes an item from the database, returns true if it was successful, false if not.
 		
 		return false;
+	}
+	
+	public boolean createShipment(HashMap<Integer, Order> orders) throws SQLException {
+		
+		stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		
+		for(Map.Entry<Integer, Order> order: orders.entrySet()) {
+			
+			int itemId = order.getKey();
+			Object [] orderInfo = order.getValue().getInfo();
+			int ID = (Integer)orderInfo[0];
+			int itemqty = (Integer)orderInfo[3];
+			int vendID = (Integer) orderInfo[4];
+			int truckNum = (Integer)orderInfo[2];
+			Date orderDate = (Date) orderInfo[1];
+			
+			String query = "INSERT INTO import_export (OrderID, ItemID,ItemQTY, VendorID, TruckNo, OrderDate)"
+					+ " VALUES ('"+ID+"','"+itemId+"',"+itemqty+",'"+vendID+"',"+truckNum+",TO_DATE('"+orderDate+"','YYYY-MM-DD'))";
+			itemResults = stmt.executeQuery(query);
+		}
+		
+		return true;
 	}
 	
 	public LinkedHashMap<Integer, Order> getHistory(int itemID) {
