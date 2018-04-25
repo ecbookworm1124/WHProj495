@@ -105,7 +105,7 @@ public class UI extends JFrame{
 		
 		
 		
-		JFrame incomingFrame = new Incoming(server, inventory, this);
+		JFrame incomingFrame = new Shipment(server, inventory, this, true);
 		incomingFrame.setSize(this.getWidth() - 100, this.getHeight() - 150);
 		incomingFrame.setTitle("Warehouse Inventory Management");
 		incomingFrame.setAlwaysOnTop(true);
@@ -113,15 +113,18 @@ public class UI extends JFrame{
 		incomingFrame.setVisible(true);
 	}
 	
-	private void newOutgoing() {
+	public void newOutgoing() {
 		
 		//Opens popup for outgoing shipment.
 		
 		//update historical record in database
 		
-		JFrame outgoingFrame = new JFrame();
+		JFrame outgoingFrame = new Shipment(server, inventory, this, false);
 		outgoingFrame.setSize(this.getWidth() - 100, this.getHeight() - 150);
 		outgoingFrame.setTitle("Warehouse Inventory Management");
+		outgoingFrame.setAlwaysOnTop(true);
+		
+		outgoingFrame.setVisible(true);
 	}
 	
 	public void changeItemLocation(Item selected, DetailFrame details) {

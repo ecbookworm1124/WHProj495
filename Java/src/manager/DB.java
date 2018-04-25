@@ -101,7 +101,7 @@ public class DB{
 		return false;
 	}
 	
-	public boolean createShipment(HashMap<Integer, Order> orders) throws SQLException {
+	public boolean createShipment(HashMap<Integer, Order> orders, HashMap<Integer, Item> inventory) throws SQLException {
 		
 		stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		
@@ -118,6 +118,13 @@ public class DB{
 			String query = "INSERT INTO import_export (OrderID, ItemID,ItemQTY, VendorID, TruckNo, OrderDate)"
 					+ " VALUES ('"+ID+"','"+itemId+"',"+itemqty+",'"+vendID+"',"+truckNum+",TO_DATE('"+orderDate+"','YYYY-MM-DD'))";
 			itemResults = stmt.executeQuery(query);
+			
+			Item current = inventory.get(ID);
+			int currentQTY = (Integer)current.getInfo()[4];
+			currentQTY += itemqty;
+			
+			query = "UPDATE item SET ItemQTY = " + currentQTY + " WHERE itemID = " + ID;
+			stmt.executeQuery(query);
 		}
 		
 		return true;
