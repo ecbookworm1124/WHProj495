@@ -38,25 +38,16 @@ BEGIN
     EXIT WHEN aisle=99;
     END LOOP;
 END;
-
-
 INSERT INTO location(locID, loc_aisle, loc_bay, loc_shelf)
-VALUES (AISLE_SEQ.CURRVAL||chr( ascii('A')+BAY_SEQ.CURRVAL-1 )||SHELF_SEQ.CURRVAL,
-        AISLE_SEQ.NEXTVAL,
-        chr(ascii('A')+BAY_SEQ.NEXTVAL-1),
-        SHELF_SEQ.NEXTVAL);
-
-INSERT INTO location(locID,loc_aisle, loc_bay, loc_shelf)
-VALUES ('01L02','01','L','02' );
-INSERT INTO location(locID,loc_aisle, loc_bay, loc_shelf)
-VALUES ('11A02','11','A','02' );
-INSERT INTO location(locID,loc_aisle, loc_bay, loc_shelf)
-VALUES ('32L02','32','L','02' );
-INSERT INTO location(locID,loc_aisle, loc_bay, loc_shelf)
-VALUES ('01Z02','01','Z','02' );
-INSERT INTO location(locID,loc_aisle, loc_bay, loc_shelf)
-VALUES ('00000','00','0','00' );
-
+                    VALUES ('00000',
+                    '00',
+                    '0',
+                    '00');
+      
+      
+      
+                    
+                    
 INSERT INTO item (ItemID, ItemName, ItemUPC, ItemQTY, LocID)
 VALUES ('0000000001','Jacknife Wire Shears',112233445566,36,'01L02');
 INSERT INTO item (ItemID, ItemName, ItemUPC, ItemQTY, LocID)
@@ -91,12 +82,32 @@ INSERT INTO vendor (VendorID, Vendor_Name, Vendor_Email, AddressID, Vendor_Phone
 VALUES ('000005','Richard Nixon','rnixon45@gmail.com','0000000002',6543441212);
 
 INSERT INTO import_export (OrderID, ItemID,ItemQTY, VendorID, TruckNo, OrderDate)
-VALUES ('0000000001','0000000005',1,'000005',12345678,TO_DATE('03/05/2018','MM/DD/YYYY'));
+VALUES ('0000000001','0000000001',42,'000005',12345678,TO_DATE('11/05/2017','MM/DD/YYYY'));
 INSERT INTO import_export (OrderID, ItemID,ItemQTY, VendorID, TruckNo, OrderDate)
-VALUES ('0000000002','0000000004',24,'000002',12345678,TO_DATE('03/05/2018','MM/DD/YYYY'));
+VALUES ('0000000002','0000000001',-12,'000002',12348234,TO_DATE('02/05/2018','MM/DD/YYYY'));
 INSERT INTO import_export (OrderID, ItemID,ItemQTY, VendorID, TruckNo, OrderDate)
-VALUES ('0000000003','0000000003',24,'000003',65434564,TO_DATE('05/05/2018','MM/DD/YYYY'));
+VALUES ('0000000003','0000000001',6,'000003',65434564,TO_DATE('04/11/2018','MM/DD/YYYY'));
 INSERT INTO import_export (OrderID, ItemID,ItemQTY, VendorID, TruckNo, OrderDate)
-VALUES ('0000000004','0000000002',12,'000004',00324598,TO_DATE('12/05/2017','MM/DD/YYYY'));
+VALUES ('0000000004','0000000002',400,'000004',00324598,TO_DATE('12/05/2017','MM/DD/YYYY'));
 INSERT INTO import_export (OrderID, ItemID,ItemQTY, VendorID, TruckNo, OrderDate)
-VALUES ('0000000005','0000000001',12, '000001',99453213,TO_DATE('02/28/2018','MM/DD/YYYY'));
+VALUES ('0000000005','0000000002',-120, '000001',99453213,TO_DATE('02/28/2018','MM/DD/YYYY'));
+INSERT INTO import_export (OrderID, ItemID,ItemQTY, VendorID, TruckNo, OrderDate)
+VALUES ('0000000006','0000000002',132,'000005',12345678,TO_DATE('03/05/2018','MM/DD/YYYY'));
+INSERT INTO import_export (OrderID, ItemID,ItemQTY, VendorID, TruckNo, OrderDate)
+VALUES ('0000000007','0000000002',100,'000002',12345678,TO_DATE('03/05/2018','MM/DD/YYYY'));
+INSERT INTO import_export (OrderID, ItemID,ItemQTY, VendorID, TruckNo, OrderDate)
+VALUES ('0000000008','0000000003',72,'000003',65434564,TO_DATE('09/05/2017','MM/DD/YYYY'));
+INSERT INTO import_export (OrderID, ItemID,ItemQTY, VendorID, TruckNo, OrderDate)
+VALUES ('0000000009','0000000003',-12,'000004',00324598,TO_DATE('12/05/2017','MM/DD/YYYY'));
+INSERT INTO import_export (OrderID, ItemID,ItemQTY, VendorID, TruckNo, OrderDate)
+VALUES ('0000000010','0000000003',-12, '000001',99453213,TO_DATE('02/28/2018','MM/DD/YYYY'));
+INSERT INTO import_export (OrderID, ItemID,ItemQTY, VendorID, TruckNo, OrderDate)
+VALUES ('0000000011','0000000003',-24,'000005',12345678,TO_DATE('03/05/2018','MM/DD/YYYY'));
+INSERT INTO import_export (OrderID, ItemID,ItemQTY, VendorID, TruckNo, OrderDate)
+VALUES ('0000000012','0000000004',120,'000002',12345678,TO_DATE('11/05/2017','MM/DD/YYYY'));
+INSERT INTO import_export (OrderID, ItemID,ItemQTY, VendorID, TruckNo, OrderDate)
+VALUES ('0000000013','0000000004',-60,'000003',65434564,TO_DATE('05/05/2018','MM/DD/YYYY'));
+INSERT INTO import_export (OrderID, ItemID,ItemQTY, VendorID, TruckNo, OrderDate)
+VALUES ('0000000014','0000000005',4,'000004',00324598,TO_DATE('12/05/2017','MM/DD/YYYY'));
+INSERT INTO import_export (OrderID, ItemID,ItemQTY, VendorID, TruckNo, OrderDate)
+VALUES ('0000000015','0000000005',-3, '000001',99453213,TO_DATE('02/28/2018','MM/DD/YYYY'));
