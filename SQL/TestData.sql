@@ -1,3 +1,51 @@
+DECLARE
+aisle number;
+bay number;
+shelf number;
+
+BEGIN
+    LOOP
+        aisle := AISLE_SEQ.NEXTVAL;
+        dbms_output.put_line('in aisle');
+        LOOP
+            bay:=BAY_SEQ.NEXTVAL;
+            dbms_output.put_line('in bay loop');
+            LOOP
+                shelf:= SHELF_SEQ.NEXTVAL;
+                IF aisle<10 AND shelf<10 THEN
+                    INSERT INTO location(locID, loc_aisle, loc_bay, loc_shelf)
+                    VALUES ('0'||aisle||chr( ascii('A')+bay-1 )||'0'||shelf,
+                    '0'||aisle,
+                    chr(ascii('A')+bay-1),
+                    '0'||shelf);
+                 ELSIF shelf<10 THEN
+                    INSERT INTO location(locID, loc_aisle, loc_bay, loc_shelf)
+                    VALUES (aisle||chr( ascii('A')+bay-1 )||'0'||shelf,
+                    aisle,
+                    chr(ascii('A')+bay-1),
+                    '0'||shelf);
+                ELSIF aisle<10 THEN
+                    INSERT INTO location(locID, loc_aisle, loc_bay, loc_shelf)
+                    VALUES ('0'||aisle||chr( ascii('A')+bay-1 )||shelf,
+                    '0'||aisle,
+                    chr(ascii('A')+bay-1),
+                    shelf);
+                END IF;
+            EXIT WHEN shelf=99;
+            END LOOP;
+        EXIT WHEN bay=26;
+        END LOOP;
+    EXIT WHEN aisle=99;
+    END LOOP;
+END;
+
+
+INSERT INTO location(locID, loc_aisle, loc_bay, loc_shelf)
+VALUES (AISLE_SEQ.CURRVAL||chr( ascii('A')+BAY_SEQ.CURRVAL-1 )||SHELF_SEQ.CURRVAL,
+        AISLE_SEQ.NEXTVAL,
+        chr(ascii('A')+BAY_SEQ.NEXTVAL-1),
+        SHELF_SEQ.NEXTVAL);
+
 INSERT INTO location(locID,loc_aisle, loc_bay, loc_shelf)
 VALUES ('01L02','01','L','02' );
 INSERT INTO location(locID,loc_aisle, loc_bay, loc_shelf)
