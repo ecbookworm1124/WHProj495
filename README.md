@@ -7,3 +7,7 @@ Warehouse Inventory Management System Capstone Project
 2. SQL Database
 
 ```
+## Installation
+```
+Download Inventory Manager.jar
+```
