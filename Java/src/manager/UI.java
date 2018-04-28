@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import java.awt.Toolkit;
 
 public class UI extends JFrame{
 	
@@ -16,7 +17,7 @@ public class UI extends JFrame{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private LinkedHashMap<Integer, Item> inventory;
+	private static LinkedHashMap<Integer, Item> inventory;
 	private JPanel pane;
 	private DB server;
 	
@@ -27,15 +28,32 @@ public class UI extends JFrame{
 		this.pane = new JPanel();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
+		server = new DB();
 		try {
-			server = new DB();
-			setup();
-			this.add(pane);
-			this.pack();
+			connect();
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(this, "Could Not Connect To Server", "Error", JOptionPane.ERROR_MESSAGE);
-			this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+			JFrame login = new LoginFrame(this, server);
+			
+			Toolkit tk = Toolkit.getDefaultToolkit();
+		    Dimension screenSize = tk.getScreenSize();
+		    
+		    login.setTitle("Warehouse Inventory Management");
+			login.setLocation(screenSize.width/4, screenSize.height/4);
+			login.setSize(450, 200);
+			login.setVisible(true);
 		}
+	}
+	
+	public void connect() throws SQLException {
+		server.connect();
+		setup();
+		this.add(pane);
+		this.pack();
+	}
+	
+	public void close() {
+		this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 	}
 	
 	private void setup() {
@@ -67,14 +85,15 @@ public class UI extends JFrame{
 		
 		Item currentItem = inventory.get(ID);	
 		
-		JFrame detailsFrame = new DetailFrame(inventory, currentItem, this);
+		JFrame detailsFrame = new DetailFrame(currentItem, this, server);
 		detailsFrame.setSize(this.getWidth() - 100, this.getHeight() - 150);
 		detailsFrame.setTitle("Warehouse Inventory Management");
+		detailsFrame.setAlwaysOnTop(true);
 		
 		detailsFrame.setVisible(true);
 	}
 	
-	private void newIncoming() {
+	public void newIncoming() {
 		// Creates popup window with information for new Incoming orders
 		
 		// If necessary it can add a new Item to the database
@@ -86,20 +105,26 @@ public class UI extends JFrame{
 		
 		
 		
-		JFrame incomingFrame = new JFrame();
+		JFrame incomingFrame = new Shipment(server, inventory, this, true);
 		incomingFrame.setSize(this.getWidth() - 100, this.getHeight() - 150);
 		incomingFrame.setTitle("Warehouse Inventory Management");
+		incomingFrame.setAlwaysOnTop(true);
+		
+		incomingFrame.setVisible(true);
 	}
 	
-	private void newOutgoing() {
+	public void newOutgoing() {
 		
 		//Opens popup for outgoing shipment.
 		
 		//update historical record in database
 		
-		JFrame outgoingFrame = new JFrame();
+		JFrame outgoingFrame = new Shipment(server, inventory, this, false);
 		outgoingFrame.setSize(this.getWidth() - 100, this.getHeight() - 150);
 		outgoingFrame.setTitle("Warehouse Inventory Management");
+		outgoingFrame.setAlwaysOnTop(true);
+		
+		outgoingFrame.setVisible(true);
 	}
 	
 	public void changeItemLocation(Item selected, DetailFrame details) {
@@ -112,8 +137,18 @@ public class UI extends JFrame{
 		
 		loc.setSize(this.getWidth() - 100, (this.getHeight() - 150)/2);
 		loc.setTitle("Warehouse Inventory Management");
+		loc.setAlwaysOnTop(true);
 		
 		loc.setVisible(true);
 	}
+	
+	public void addNewItem() {
+		int size = inventory.size();
+		NewItem newGuy = new NewItem(server, size, inventory, this);
+		newGuy.setAlwaysOnTop(true);
+		newGuy.setSize(this.getWidth() - 100, (this.getHeight() - 150)/2);
+		newGuy.setVisible(true);
+	}
+	
 
 }

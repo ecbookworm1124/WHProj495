@@ -11,6 +11,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.swing.JLabel;
@@ -32,10 +33,12 @@ public class DetailFrame extends JFrame{
 	private JTable historyTable;
 	private Object [] itemInfo;
 	
-	public DetailFrame(HashMap<Integer, Item> inventory, Item selected, UI parent) {
+	public DetailFrame(Item selected, UI parent, DB server) {
 		
 		this.itemInfo = selected.getInfo();
 		//// May change the above later, depending on how we implement history
+		
+		LinkedHashMap<Integer, Order> orders = server.getHistory((int)itemInfo[0]);
 		
 		this.setSize(500, 400);
 		
@@ -131,13 +134,13 @@ public class DetailFrame extends JFrame{
 		
 		//// Building Table ////////////////
 		
-		String [] columns = {"Order Number", "Order Date", "Truck Number", "QTY"};
-		Object rows [][] = new Object[inventory.size()][columns.length];
+		String [] columns = {"Order ID", "Order Date", "Truck Number", "QTY", "Vendor ID"};
+		Object rows [][] = new Object[orders.size()][columns.length];
 		
 		int counter = 0;
-		for(Map.Entry<Integer, Item> product: inventory.entrySet()) {
-			Item item = product.getValue();
-			rows[counter] = item.getInfo();
+		for(Map.Entry<Integer, Order> product: orders.entrySet()) {
+			Order order = product.getValue();
+			rows[counter] = order.getInfo();
 			counter ++;
 		}
 		

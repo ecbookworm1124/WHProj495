@@ -77,11 +77,13 @@ public class InventoryPanel extends JPanel{
 		panel.add(viewDetails, gbc);
 		
 		JButton newShipment = new JButton("New Incoming Shipment");
+		newShipment.addActionListener(e->myGUI.newIncoming());
 		newShipment.setAlignmentX(Component.CENTER_ALIGNMENT);
 		gbc.gridy = 1;	
 		panel.add(newShipment, gbc);
 		
 		JButton outShipment = new JButton("New Outgoing Shipment");
+		outShipment.addActionListener(e->myGUI.newOutgoing());
 		outShipment.setAlignmentX(Component.CENTER_ALIGNMENT);	
 		gbc.gridy=2;
 		panel.add(outShipment, gbc);
